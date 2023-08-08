@@ -1,0 +1,13 @@
+
+<div class="cardsArea">
+  <app-test-card>
+    
+  </app-test-card>
+
+  <ng-container *ngIf="cards">
+    <app-test-card *ngFor="let card of cards" [card]="card">
+    </app-test-card>
+  </ng-container>
+</div>
+
+{{getDate()}}

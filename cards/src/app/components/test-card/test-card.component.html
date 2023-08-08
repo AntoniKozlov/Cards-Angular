@@ -1,0 +1,16 @@
+<ng-container *ngIf="!card">
+  <mat-card class="card addCard" (click)="addCard()">
+    <mat-card-content>
+      PLUS
+    </mat-card-content>
+  </mat-card>
+</ng-container>
+
+<mat-card class="card" *ngIf="card" (click)="addCard(card)">
+  <button mat-stroked-button (click)="deleteCard($event, card)" class="deleteBtn">X</button> 
+  <mat-card-content>
+    {{card.description}}
+  </mat-card-content>
+</mat-card>
+
+{{getDate()}}

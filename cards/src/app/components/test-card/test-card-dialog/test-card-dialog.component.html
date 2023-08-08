@@ -1,0 +1,38 @@
+
+<mat-dialog-content class="mat-typography text-center">
+  
+    <form class="columnSetup" #formDirective="ngForm" [formGroup]="testCardForm" autocomplete="off">
+      <mat-form-field appearance="outline" class="fieldWrap">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name">
+        <mat-error *ngIf="name.hasError('required')">
+          This field is required.
+        </mat-error>
+        <mat-error *ngIf="name.hasError('pattern') && !(name.hasError('minlength') || name.hasError('maxlength'))">
+          Field can consist of the following characters: A-Z, a-z or 0-9
+        </mat-error>
+        <mat-error *ngIf="name.hasError('minlength') || name.hasError('maxlength')">
+          Field must be from 2 to 100 characters
+        </mat-error>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline" class="fieldWrap">
+        <mat-label>Description</mat-label>
+        <textarea rows="4" matInput formControlName="description"></textarea>
+        <mat-error *ngIf="description.hasError('required')">
+          This field is required.
+        </mat-error>
+        <mat-error *ngIf="description.hasError('pattern') && !(description.hasError('minlength') || description.hasError('maxlength'))">
+          Field can consist of the following characters: A-Z, a-z or 0-9
+        </mat-error>
+        <mat-error *ngIf="description.hasError('minlength') || description.hasError('maxlength')">
+          Field must be from 2 to 100 characters
+        </mat-error>
+      </mat-form-field>
+    </form>
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+ 
+  <button mat-stroked-button [disabled]="testCardForm.invalid" (click)="save()" color="primary">{{dialogData.status == testCardDialogDataStatuses.UPDATE_CARD ? 'Update' : 'Create'}}</button>
+</mat-dialog-actions>
