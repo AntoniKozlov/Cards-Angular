@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -10,7 +12,8 @@ import { TestCardsGridComponent } from './components/test-card/test-cards-grid/t
 import { TestCardsComponent } from './pages/test-cards/test-cards.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './modules/material/material.module';
-import { HttpClientModule } from '@angular/common/http';
+import { CutTextDirective } from './directives/cut-text.directive';
+
 
 @NgModule({
   declarations: [
@@ -18,7 +21,8 @@ import { HttpClientModule } from '@angular/common/http';
     TestCardsComponent,
     TestCardComponent,
     TestCardsGridComponent,
-    TestCardDialogComponent
+    TestCardDialogComponent,
+    CutTextDirective
   ],
   imports: [
     BrowserModule,
@@ -27,7 +31,8 @@ import { HttpClientModule } from '@angular/common/http';
     ReactiveFormsModule,
     MaterialModule,
     BrowserAnimationsModule,
-    HttpClientModule 
+    HttpClientModule,
+    CommonModule
   ],
   providers: [],
   bootstrap: [AppComponent]

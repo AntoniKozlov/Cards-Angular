@@ -1,7 +1,8 @@
 import { Component, OnInit, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { TestCardDialogData, TestCardDialogDataStatuses } from 'src/app/models/test-cards/test-cards';
+import { ITestCardDialogData, TestCardDialogData, TestCardDialogDataStatuses } from 'src/app/models/test-card/test-card';
+
 
 
 import { NoOptionals, TestCardService } from 'src/app/services/test-card.service';
@@ -15,18 +16,21 @@ import { latinLettersAndDigits, latinLettersOrDigits } from 'src/app/shared/rege
   providers: [TestCardService],
 })
 export class TestCardDialogComponent implements OnInit {
+  public maxDescriptionLength: number = 400;
+  public maxNameLength: number = 100;
+  public minLength: number = 2;
 
   testCardForm: FormGroup = new FormGroup({
     name: new FormControl('', [
       Validators.required,
-      Validators.minLength(2),
-      Validators.maxLength(100),
+      Validators.minLength(this.minLength),
+      Validators.maxLength(this.maxNameLength),
       Validators.pattern(latinLettersOrDigits)
     ]),
     description: new FormControl('', [
       Validators.required,
-      Validators.minLength(2),
-      Validators.maxLength(100),
+      Validators.minLength(this.minLength),
+      Validators.maxLength(this.maxDescriptionLength),
       Validators.pattern(latinLettersOrDigits)
     ]),
   });
@@ -35,11 +39,11 @@ export class TestCardDialogComponent implements OnInit {
     return TestCardDialogDataStatuses;
   }
 
-  public dialogData: TestCardDialogData;
+  public dialogData: ITestCardDialogData;
   private isUpdateCard: boolean;
     
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: TestCardDialogData,
+    @Inject(MAT_DIALOG_DATA) private data: ITestCardDialogData,
     private dialogRef: MatDialogRef<TestCardDialogComponent>,
     private testCardService: TestCardService
   ) { 
@@ -56,12 +60,13 @@ export class TestCardDialogComponent implements OnInit {
   }
 
   save() {
-    const data: NoOptionals<TestCardDialogData> = {
-      id: this.isUpdateCard ? this.dialogData.id : this.testCardService.generateId,
-      ...this.testCardForm.value,
-      date: this.testCardService.newDate,
-      status: this.dialogData.status,
-    }
+    const data: NoOptionals<ITestCardDialogData> = new TestCardDialogData(
+      this.dialogData.status,
+      this.name.value,
+      this.description.value,
+      this.isUpdateCard ? this.dialogData.id : undefined,
+    );
+    
     this.closeDialog(data);
   }
 
@@ -74,7 +79,7 @@ export class TestCardDialogComponent implements OnInit {
     return this.testCardForm.get('description') as FormControl;
   }
 
-  closeDialog(data: TestCardDialogData) {
+  closeDialog(data: ITestCardDialogData) {
     this.dialogRef.close(data);
   }
 

@@ -1,15 +1,22 @@
 <ng-container *ngIf="!card">
   <mat-card class="card addCard" (click)="addCard()">
     <mat-card-content>
-      PLUS
+      <mat-icon>add</mat-icon>
     </mat-card-content>
   </mat-card>
 </ng-container>
 
 <mat-card class="card" *ngIf="card" (click)="addCard(card)">
-  <button mat-stroked-button (click)="deleteCard($event, card)" class="deleteBtn">X</button> 
+  <button mat-mini-fab (click)="deleteCard($event, card)" class="deleteBtn">
+    <mat-icon>delete</mat-icon>
+  </button> 
+  <div class="title">
+    {{card.name}}
+  </div>
   <mat-card-content>
+    <div [appCutText]="card.description">
     {{card.description}}
+    </div>
   </mat-card-content>
 </mat-card>
 

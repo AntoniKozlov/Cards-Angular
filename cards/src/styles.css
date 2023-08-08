@@ -2,3 +2,17 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+.dialogTitle {
+    border-bottom: 1px solid #5187D7;
+    padding: 16px;
+}
+
+mat-dialog-actions {
+    border-top: 1px solid #5187D7 !important;
+}
+
+mat-dialog-content {
+    padding-top: 20px !important;
+}

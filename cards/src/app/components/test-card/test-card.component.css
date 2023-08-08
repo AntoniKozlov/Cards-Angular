@@ -2,7 +2,28 @@
     width: 100%;
     height: 100%;
     position: relative;
+    border: 2px solid #5187D7;
+    cursor: pointer;
+    transition-timing-function: ease-in-out;
+    animation-name: appear;
+    animation-duration: 1000ms;
+    /* animation-fill-mode: both; */
 }
+
+.card .title {
+    padding: 16px;
+}
+
+@keyframes appear {
+    0%{
+        opacity: 0;
+        transform: rotateX(90deg);
+    }
+    100%{
+        opacity: 1;
+        transform: rotateX(0);
+    }
+  }
 
 .addCard {
     display: flex;
@@ -12,12 +33,15 @@
     margin: auto;
 }
 
-.deleteBtn {
-    position: absolute;
-    right: 0px;
-    top: 0px;
+.addCard mat-icon {
+    font-size: 150px;
+    height: 150px;
+    width: 150px;
+    color: #5187D7
 }
 
-mat-card-content {
-    margin-top: 50px;
+.deleteBtn {
+    position: absolute;
+    right: -20px;
+    top: -20px;
 }

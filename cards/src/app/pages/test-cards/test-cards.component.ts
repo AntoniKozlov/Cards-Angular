@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+import { ITestCard } from 'src/app/models/test-card/test-card';
 import { TestCardService } from 'src/app/services/test-card.service';
-import { TestCard } from '../../models/test-cards/test-cards';
+
 
 @Component({
   selector: 'app-test-cards',
@@ -11,7 +12,7 @@ import { TestCard } from '../../models/test-cards/test-cards';
 })
 export class TestCardsComponent implements OnInit {
 
-  cards$: Observable<TestCard[]>;
+  cards$: Observable<ITestCard[]>;
 
   constructor(public testCardService: TestCardService) {
     this.cards$ = this.testCardService.cards$;

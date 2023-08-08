@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { concatMap, map, Observable, of, publishReplay, refCount, ReplaySubject, scan, share, shareReplay, Subject, switchMap, switchMapTo, tap } from 'rxjs';
-import { TestCard, TestCardDialogData, TestCardDialogDataStatuses } from '../models/test-cards/test-cards';
+import { ITestCard, ITestCardDialogData, TestCard, TestCardDialogDataStatuses } from '../models/test-card/test-card';
+
 
 
 export type NoOptionals<T> = {
@@ -9,29 +10,29 @@ export type NoOptionals<T> = {
 };
 
 interface ITestCardOperation extends Function {
-  (testCards: TestCard[]): TestCard[];
+  (testCards: ITestCard[]): ITestCard[];
 }
 
 @Injectable()
 export class TestCardService {
-  addCard$: Subject<TestCard> = new Subject<TestCard>();
+  addCard$: Subject<ITestCard> = new Subject<ITestCard>();
   initCards$: Subject<void> = new Subject<void>();
   
-  updateCard$: Subject<TestCard> = new Subject<TestCard>();
-  deleteCard$: Subject<TestCard> = new Subject<TestCard>();
+  updateCard$: Subject<ITestCard> = new Subject<ITestCard>();
+  deleteCard$: Subject<ITestCard> = new Subject<ITestCard>();
 
-  create$: Subject<TestCard> = new Subject<TestCard>();
+  create$: Subject<ITestCard> = new Subject<ITestCard>();
   updates$: Subject<ITestCardOperation> = new Subject<ITestCardOperation>();
 
-  cards$: ReplaySubject<TestCard[]> = new ReplaySubject<TestCard[]>(1);
+  cards$: ReplaySubject<ITestCard[]> = new ReplaySubject<ITestCard[]>(1);
 
-  initialCards: TestCard[] = [];
+  initialCards: ITestCard[] = [];
 
   constructor(private http: HttpClient) {
     this.updates$
       .pipe(
         scan(
-          (cards: TestCard[], operation: any) => {
+          (cards: ITestCard[], operation: any) => {
             return operation(cards);
           },
         this.initialCards),
@@ -39,8 +40,8 @@ export class TestCardService {
 
     this.create$
       .pipe(
-        map((card: TestCard) => {
-          return (cards: TestCard[]) => {
+        map((card: ITestCard) => {
+          return (cards: ITestCard[]) => {
             return cards.concat(card);
           };
         }),
@@ -59,17 +60,13 @@ export class TestCardService {
 
     this.updateCard$
       .pipe(
-        map((card: TestCard) => {
-          return (cards: TestCard[]) => {
+        map((card: ITestCard) => {
+          return (cards: ITestCard[]) => {
             const existingCardIndex = cards.findIndex(existingCard => existingCard.id == card.id);
 
             if (existingCardIndex !== -1) {
-              cards.splice(existingCardIndex, 1, {
-                  ...cards[existingCardIndex],
-                  name: card.name, 
-                  description: card.description
-                }
-              );
+              const updatedCard = new TestCard(card.name, card.description, card.id, card.date);
+              cards.splice(existingCardIndex, 1, updatedCard);
             }
 
             return [...cards];
@@ -80,8 +77,8 @@ export class TestCardService {
 
     this.deleteCard$
       .pipe(
-        map((card: TestCard) => {
-          return (cards: TestCard[]) => {
+        map((card: ITestCard) => {
+          return (cards: ITestCard[]) => {
             const existingCardIndex = cards.findIndex(existingCard => existingCard.id == card.id);
 
             if (existingCardIndex !== -1) {
@@ -94,7 +91,7 @@ export class TestCardService {
       .subscribe(this.updates$);
   }
 
-  addCard(card: TestCard): void {
+  addCard(card: ITestCard): void {
     this.addCard$.next(card);
   }
 
@@ -102,38 +99,32 @@ export class TestCardService {
     this.initCards$.next();
   }
 
-  updateCard(card: TestCard): void {
+  updateCard(card: ITestCard): void {
     this.updateCard$.next(card);
   }
 
-  deleteCard(card: TestCard): void {
+  deleteCard(card: ITestCard): void {
     this.deleteCard$.next(card);
   }
   
 
-  getCardsFromServer(): Observable<TestCard[]> {
+  getCardsFromServer(): Observable<ITestCard[]> {
     return new Observable((observer) => {
-      observer.next([
-        {id: 1, name: 'Anton', description: 'Blablablabalabl ablablablal', date: new Date()},
-        {id: 2, name: 'Boris', description: 'Blab22lablabalabl ablablablal', date: new Date()},
-      ]);
+      const data: ITestCard[] = [
+        new TestCard('Anton', 'Blablablabalabl  df df  df dfdfablablablal  df df dfBla blablabalabl a df df df blablablal Blablablabalabl ablablablal Blablablabalabl ablablablal Blablablabalabl ablablablal blabalabl ablablablal Blablablabalabl ablablabla', 1, new Date()),
+        new TestCard('Boris', 'Blab22lablabalabl ablablablal', 2, new Date()),
+      ];
+
+      observer.next(data);
     });
   }
 
-  addOrUpdateCard(card: NoOptionals<TestCardDialogData>): void {
+  addOrUpdateCard(card: NoOptionals<ITestCardDialogData>): void {
     const { status: _, ...testCard } = card;
 
     this[card.status == TestCardDialogDataStatuses.UPDATE_CARD ? 'updateCard' : 'addCard'](
       testCard
     );
-  }
-
-  get generateId(): number {
-    return Math.floor(Math.random() * 100);
-  }
-
-  get newDate(): Date {
-    return new Date();
   }
   
 }

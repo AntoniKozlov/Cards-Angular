@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { TestCard } from 'src/app/models/test-cards/test-cards';
+import { ITestCard } from 'src/app/models/test-card/test-card';
+
 
 
 @Component({
@@ -10,7 +11,7 @@ import { TestCard } from 'src/app/models/test-cards/test-cards';
 })
 export class TestCardsGridComponent implements OnInit {
 
-  @Input() cards?: TestCard[] | null;
+  @Input() cards?: ITestCard[] | null;
 
   constructor() {
     

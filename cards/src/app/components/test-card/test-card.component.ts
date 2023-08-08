@@ -5,7 +5,8 @@ import { TestCardDialogComponent } from './test-card-dialog/test-card-dialog.com
 import { MatDialog } from '@angular/material/dialog';
 
 import { NoOptionals, TestCardService } from '../../services/test-card.service';
-import { TestCard, TestCardDialogData, TestCardDialogDataStatuses } from 'src/app/models/test-cards/test-cards';
+import { ITestCard, ITestCardDialogData, TestCard, TestCardDialogData, TestCardDialogDataStatuses } from 'src/app/models/test-card/test-card';
+
 
 @Component({
   selector: 'app-test-card',
@@ -15,7 +16,7 @@ import { TestCard, TestCardDialogData, TestCardDialogDataStatuses } from 'src/ap
 })
 export class TestCardComponent implements OnInit {
   @HostBinding('attr.class') cssClass = 'cardItem';
-  @Input() card: any;
+  @Input() card?: ITestCard;
 
   constructor(private dialog: MatDialog, private testCardService: TestCardService) { }
 
@@ -23,8 +24,8 @@ export class TestCardComponent implements OnInit {
   }
 
 
-  addCard(card?: TestCard) {
-    const data: TestCardDialogData = {
+  addCard(card?: ITestCard) {
+    const data: ITestCardDialogData = {
       ...card,
       status: card ? TestCardDialogDataStatuses.UPDATE_CARD : TestCardDialogDataStatuses.CREATE_CARD
     };
@@ -40,7 +41,7 @@ export class TestCardComponent implements OnInit {
     });
   }
 
-  deleteCard(e: Event, card: TestCard) {
+  deleteCard(e: Event, card: ITestCard) {
     e.stopPropagation();
     this.testCardService.deleteCard(card);
     

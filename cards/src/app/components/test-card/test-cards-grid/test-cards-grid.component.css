@@ -1,14 +1,14 @@
 .cardsArea {
     display: grid;
     place-items: center;
-    gap: 20px;
+    gap: 30px;
     justify-items : center;
     align-items: center;
     justify-content: center;
     align-content: center;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     grid-template-rows: repeat(auto-fill, minmax(300px, 1fr));
-    padding: 10px;
+    padding: 30px;
 }
 
 ::ng-deep .cardItem {

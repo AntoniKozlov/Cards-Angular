@@ -11,6 +11,11 @@
 
 .columnSetup textarea {
     max-height: 200px;
+    min-height: 88px;
+}
+
+.columnSetup mat-error {
+    font-size: 12px;
 }
 
 .text-center {

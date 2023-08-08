@@ -1,4 +1,6 @@
-
+<div class="dialogTitle text-center">
+  {{dialogData.status == testCardDialogDataStatuses.UPDATE_CARD ? 'Update' : 'Create'}} card
+</div>
 <mat-dialog-content class="mat-typography text-center">
   
     <form class="columnSetup" #formDirective="ngForm" [formGroup]="testCardForm" autocomplete="off">
@@ -12,7 +14,7 @@
           Field can consist of the following characters: A-Z, a-z or 0-9
         </mat-error>
         <mat-error *ngIf="name.hasError('minlength') || name.hasError('maxlength')">
-          Field must be from 2 to 100 characters
+          Field must be from {{this.minLength}} to {{maxNameLength}} characters
         </mat-error>
       </mat-form-field>
       
@@ -26,7 +28,7 @@
           Field can consist of the following characters: A-Z, a-z or 0-9
         </mat-error>
         <mat-error *ngIf="description.hasError('minlength') || description.hasError('maxlength')">
-          Field must be from 2 to 100 characters
+          Field must be from {{this.minLength}} to {{maxDescriptionLength}} characters
         </mat-error>
       </mat-form-field>
     </form>
