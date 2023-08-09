@@ -15,12 +15,7 @@ export class TestCard implements ITestCard {
         this.name = name;
         this.description = description;
         this.date = date ?? this.newDate;
-        this.id = id ?? this.generateId;
-    }
-
-
-    get generateId(): number {
-        return Math.floor(Math.random() * 100);
+        this.id = id ?? 0;
     }
 
     get newDate(): Date {

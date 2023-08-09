@@ -6,5 +6,12 @@ const selectTestCard = (appState: IAppState) => appState.testCard;
 
 export const selectTestCardData = createSelector(
     selectTestCard,
-    (state: ITestCardState) => state
+    (state: ITestCardState) => state.testCards
 )
+
+export const selectTestCardStatus = createSelector(
+    selectTestCard,
+    (state: ITestCardState) => state.status
+)
+
+

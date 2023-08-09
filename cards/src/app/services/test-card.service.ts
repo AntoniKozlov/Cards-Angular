@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { concatMap, map, Observable, of, publishReplay, refCount, ReplaySubject, scan, share, shareReplay, Subject, switchMap, switchMapTo, tap } from 'rxjs';
 import { ITestCard, ITestCardDialogData, TestCard, TestCardDialogDataStatuses } from '../models/test-card/test-card';
+import { generateId } from '../shared/utils';
 
 
 
@@ -13,7 +14,9 @@ interface ITestCardOperation extends Function {
   (testCards: ITestCard[]): ITestCard[];
 }
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class TestCardService {
   addCard$: Subject<ITestCard> = new Subject<ITestCard>();
   initCards$: Subject<void> = new Subject<void>();
@@ -116,6 +119,20 @@ export class TestCardService {
       ];
 
       observer.next(data);
+    });
+  }
+
+  addCardServer(card: ITestCard): Observable<ITestCard> {
+    return new Observable((observer) => {
+      const newCard = new TestCard(card.name, card.description, generateId(), card.date);
+      observer.next(newCard);
+    });
+  }
+
+  updateCardServer(card: ITestCard): Observable<ITestCard> {
+    return new Observable((observer) => {
+      const newCard = new TestCard(card.name, card.description, card.id, card.date);
+      observer.next(newCard);
     });
   }
 

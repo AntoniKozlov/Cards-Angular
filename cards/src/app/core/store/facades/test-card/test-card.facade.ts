@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Action, Store } from "@ngrx/store";
-import { selectTestCardData } from "../../selectors/test-card.selector";
+import { selectTestCardData, selectTestCardStatus } from "../../selectors/test-card.selector";
 import { IAppState } from "../../state/app.state";
 
 @Injectable({
@@ -8,6 +8,7 @@ import { IAppState } from "../../state/app.state";
 })
 export class TestCardFacade {
     selectTestCardData$ = this._store.select(selectTestCardData);
+    selectTestCardStatus$ = this._store.select(selectTestCardStatus);
 
     constructor(private _store: Store<IAppState>) { }
 

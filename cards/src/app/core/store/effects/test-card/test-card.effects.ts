@@ -1,4 +1,4 @@
-import { GetTestCards, GetTestCardsSuccess } from './../../actions/test-card.action';
+import { AddTestCard, AddTestCardSuccess, GetTestCards, GetTestCardsSuccess, UpdateTestCard, UpdateTestCardSuccess } from './../../actions/test-card.action';
 import { TestCardService } from 'src/app/services/test-card.service';
 import { Injectable } from '@angular/core';
 import { createEffect, ofType, Actions } from '@ngrx/effects';
@@ -29,7 +29,25 @@ export class TestCardEffects {
             switchMap(() => this._testCardService.getCardsFromServer()),
             switchMap((testCardsHttp: ITestCard[]) => of(new GetTestCardsSuccess(testCardsHttp)))
         )
-    )
+    );
+
+    addTestCard$ = createEffect(() =>  
+        this._actions$.pipe(
+            ofType<AddTestCard>(ETestCardActions.AddTestCard),
+            map(action => action.payload),
+            switchMap((card: ITestCard) => this._testCardService.addCardServer(card)),
+            switchMap((testCardHttp: ITestCard) => of(new AddTestCardSuccess(testCardHttp)))
+        )
+    );
+
+    updateTestCard$ = createEffect(() =>  
+        this._actions$.pipe(
+            ofType<UpdateTestCard>(ETestCardActions.UpdateTestCard),
+            map(action => action.payload),
+            switchMap((card: ITestCard) => this._testCardService.updateCardServer(card)),
+            switchMap((testCardHttp: ITestCard) => of(new UpdateTestCardSuccess(testCardHttp)))
+        )
+    );
   
 
   constructor(

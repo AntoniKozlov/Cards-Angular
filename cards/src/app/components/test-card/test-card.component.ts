@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { NoOptionals, TestCardService } from '../../services/test-card.service';
 import { ITestCard, ITestCardDialogData, TestCard, TestCardDialogData, TestCardDialogDataStatuses } from 'src/app/models/test-card/test-card';
+import { TestCardStatuses } from 'src/app/core/store/state/test-card.state';
 
 
 @Component({
@@ -34,10 +35,8 @@ export class TestCardComponent implements OnInit {
       data
     });
 
-    dialogRef.afterClosed().pipe(take(1)).subscribe((result: NoOptionals<TestCardDialogData>) => {
-      if (result) {
-        this.testCardService.addOrUpdateCard(result);
-      }
+    dialogRef.afterClosed().pipe(take(1)).subscribe((result: TestCardStatuses) => {
+
     });
   }
 

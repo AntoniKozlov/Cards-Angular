@@ -1,7 +1,11 @@
 import { Component, OnInit, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ITestCardDialogData, TestCardDialogData, TestCardDialogDataStatuses } from 'src/app/models/test-card/test-card';
+import { take } from 'rxjs';
+import { AddTestCard, ChangeTestCardStatus, UpdateTestCard } from 'src/app/core/store/actions/test-card.action';
+import { TestCardFacade } from 'src/app/core/store/facades/test-card/test-card.facade';
+import { TestCardStatuses } from 'src/app/core/store/state/test-card.state';
+import { ITestCard, ITestCardDialogData, TestCard, TestCardDialogData, TestCardDialogDataStatuses } from 'src/app/models/test-card/test-card';
 
 
 
@@ -13,7 +17,7 @@ import { latinLettersAndDigits, latinLettersOrDigits } from 'src/app/shared/rege
   templateUrl: './test-card-dialog.component.html',
   styleUrls: ['./test-card-dialog.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [TestCardService],
+  // providers: [TestCardService],
 })
 export class TestCardDialogComponent implements OnInit {
   public maxDescriptionLength: number = 400;
@@ -45,7 +49,8 @@ export class TestCardDialogComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: ITestCardDialogData,
     private dialogRef: MatDialogRef<TestCardDialogComponent>,
-    private testCardService: TestCardService
+    private testCardService: TestCardService,
+    private testCardFacade: TestCardFacade
   ) { 
     this.dialogData = data;
     this.isUpdateCard = data.status == TestCardDialogDataStatuses.UPDATE_CARD;
@@ -60,14 +65,22 @@ export class TestCardDialogComponent implements OnInit {
   }
 
   save() {
-    const data: NoOptionals<ITestCardDialogData> = new TestCardDialogData(
-      this.dialogData.status,
+    const data: ITestCard = new TestCard(  
       this.name.value,
-      this.description.value,
-      this.isUpdateCard ? this.dialogData.id : undefined,
+      this.description.value
     );
     
-    this.closeDialog(data);
+    this.testCardFacade.dispatch(
+      this.isUpdateCard ? new UpdateTestCard(data) : new AddTestCard(data)
+    );
+
+    this.testCardFacade.selectTestCardStatus$.pipe(take(1)).subscribe((status) => {
+      if (status === TestCardStatuses.SUCCESSFUL_ADDED) {
+        this.closeDialog(status);
+        this.testCardFacade.dispatch(new ChangeTestCardStatus(TestCardStatuses.EMPTY));
+      }
+    });
+    
   }
 
 
@@ -79,7 +92,7 @@ export class TestCardDialogComponent implements OnInit {
     return this.testCardForm.get('description') as FormControl;
   }
 
-  closeDialog(data: ITestCardDialogData) {
+  closeDialog(data: TestCardStatuses) {
     this.dialogRef.close(data);
   }
 
