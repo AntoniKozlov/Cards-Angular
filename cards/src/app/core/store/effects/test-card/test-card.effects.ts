@@ -12,16 +12,6 @@ import { IAppState } from '../../state/app.state';
 
 @Injectable()
 export class TestCardEffects {
-//   @Effect()
-//   getUser$ = this._actions$.pipe(
-//     ofType<GetUser>(EUserActions.GetUser),
-//     map(action => action.payload),
-//     withLatestFrom(this._store.pipe(select(selectUserList))),
-//     switchMap(([id, users]) => {
-//       const selectedUser = users.filter(user => user.id === +id)[0];
-//       return of(new GetUserSuccess(selectedUser));
-//     })
-//   );
 
     getTestCards$ = createEffect(() =>  
         this._actions$.pipe(

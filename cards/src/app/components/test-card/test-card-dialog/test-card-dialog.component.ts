@@ -17,7 +17,6 @@ import { latinLettersAndDigits, latinLettersOrDigits } from 'src/app/shared/rege
   templateUrl: './test-card-dialog.component.html',
   styleUrls: ['./test-card-dialog.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  // providers: [TestCardService],
 })
 export class TestCardDialogComponent implements OnInit {
   public maxDescriptionLength: number = 400;
@@ -70,7 +69,7 @@ export class TestCardDialogComponent implements OnInit {
       this.description.value,
       this.dialogData.id
     );
-    
+
     this.testCardFacade.dispatch(
       this.isUpdateCard ? new UpdateTestCard(data) : new AddTestCard(data)
     );
