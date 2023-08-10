@@ -17,6 +17,7 @@ import { MaterialModule } from './modules/material/material.module';
 import { CutTextDirective } from './directives/cut-text.directive';
 import { appReducers } from './core/store/reducers/app.reducers';
 import { TestCardEffects } from './core/store/effects/test-card/test-card.effects';
+import { NgxsModule } from '@ngxs/store';
 
 
 
@@ -39,7 +40,10 @@ import { TestCardEffects } from './core/store/effects/test-card/test-card.effect
     HttpClientModule,
     CommonModule,
     StoreModule.forRoot(appReducers),
-    EffectsModule.forRoot([TestCardEffects])
+    EffectsModule.forRoot([TestCardEffects]),
+    NgxsModule.forRoot([], {
+      developmentMode: true
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]

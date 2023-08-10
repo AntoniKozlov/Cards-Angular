@@ -48,10 +48,9 @@ export class TestCardService {
     });
   }
 
-  deleteCardServer(card: ITestCard): Observable<ITestCard> {
+  deleteCardServer(id: number): Observable<number> {
     return new Observable((observer) => {
-      const newCard = new TestCard(card.name, card.description, card.id, card.date);
-      observer.next(newCard);
+      observer.next(id);
     });
   }
   
