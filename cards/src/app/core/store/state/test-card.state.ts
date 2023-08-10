@@ -3,7 +3,9 @@ import { ITestCard } from "src/app/models/test-card/test-card"
 
 export enum TestCardStatuses {
     EMPTY,
-    SUCCESSFUL_ADDED
+    SUCCESSFUL_ADDED,
+    SUCCESSFUL_UPDATED,
+    SUCCESSFUL_DELETED
 }
 
 export interface ITestCardState {

@@ -1,8 +1,8 @@
 export interface ITestCard {
-    readonly id: number;
+    id: number;
     name: string;
     description: string;
-    readonly date: Date;
+    date: Date;
 }
 
 export class TestCard implements ITestCard {
@@ -14,8 +14,8 @@ export class TestCard implements ITestCard {
     constructor(name: string, description: string, id?: number, date?: Date) {
         this.name = name;
         this.description = description;
-        this.date = date ?? this.newDate;
         this.id = id ?? 0;
+        this.date = date ?? this.newDate;
     }
 
     get newDate(): Date {

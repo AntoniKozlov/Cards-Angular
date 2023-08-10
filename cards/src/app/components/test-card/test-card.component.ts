@@ -1,3 +1,4 @@
+import { ChangeTestCardStatus, DeleteTestCard } from './../../core/store/actions/test-card.action';
 
 import { ChangeDetectionStrategy, Component, HostBinding, Input, OnInit } from '@angular/core';
 import { take } from 'rxjs';
@@ -7,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { NoOptionals, TestCardService } from '../../services/test-card.service';
 import { ITestCard, ITestCardDialogData, TestCard, TestCardDialogData, TestCardDialogDataStatuses } from 'src/app/models/test-card/test-card';
 import { TestCardStatuses } from 'src/app/core/store/state/test-card.state';
+import { TestCardFacade } from 'src/app/core/store/facades/test-card/test-card.facade';
 
 
 @Component({
@@ -19,9 +21,10 @@ export class TestCardComponent implements OnInit {
   @HostBinding('attr.class') cssClass = 'cardItem';
   @Input() card?: ITestCard;
 
-  constructor(private dialog: MatDialog, private testCardService: TestCardService) { }
+  constructor(private dialog: MatDialog, private testCardFacade: TestCardFacade) { }
 
   ngOnInit() {
+    
   }
 
 
@@ -42,8 +45,13 @@ export class TestCardComponent implements OnInit {
 
   deleteCard(e: Event, card: ITestCard) {
     e.stopPropagation();
-    this.testCardService.deleteCard(card);
-    
+    this.testCardFacade.dispatch(new DeleteTestCard(card));
+
+    this.testCardFacade.selectTestCardStatus$.pipe(take(1)).subscribe((status) => {
+      if (TestCardStatuses.SUCCESSFUL_DELETED == status) {
+        this.testCardFacade.dispatch(new ChangeTestCardStatus(TestCardStatuses.EMPTY));
+      }
+    });
   }
 
   getDate() {

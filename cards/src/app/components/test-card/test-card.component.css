@@ -4,10 +4,9 @@
     position: relative;
     border: 2px solid #5187D7;
     cursor: pointer;
-    transition-timing-function: ease-in-out;
+    transition-timing-function: ease;
     animation-name: appear;
     animation-duration: 1000ms;
-    /* animation-fill-mode: both; */
 }
 
 .card .title {

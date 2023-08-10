@@ -1,6 +1,7 @@
+import { Action } from "@ngrx/store";
+
 import { TestCardStatuses } from './../state/test-card.state';
 import { ITestCard } from './../../../models/test-card/test-card';
-import { Action } from "@ngrx/store";
 
 
 export enum ETestCardActions {
@@ -9,6 +10,7 @@ export enum ETestCardActions {
     UpdateTestCard = '[Test Card] Update Test Card',
     UpdateTestCardSuccess = '[Test Card] Update Test Card Success',
     DeleteTestCard = '[Test Card] Delete Test Card',
+    DeleteTestCardSuccess = '[Test Card] Delete Test Card Success',
     GetTestCards = '[Test Card] Get Test Cards',
     GetTestCardsSuccess = '[Test Card] Get Test Cards Success',
     ChangeTestCardStatus = '[Test Card] Change Test Card Status',
@@ -36,6 +38,12 @@ export class UpdateTestCardSuccess implements Action {
 
 export class DeleteTestCard implements Action {
     public readonly type = ETestCardActions.DeleteTestCard;
+    constructor(public payload: ITestCard) {}
+}
+
+export class DeleteTestCardSuccess implements Action {
+    public readonly type = ETestCardActions.DeleteTestCardSuccess;
+    constructor(public payload: ITestCard) {}
 }
 
 export class GetTestCards implements Action {
@@ -58,6 +66,7 @@ export type TestCardActions =
     UpdateTestCard | 
     UpdateTestCardSuccess |
     DeleteTestCard | 
+    DeleteTestCardSuccess |
     GetTestCards | 
     GetTestCardsSuccess | 
     AddTestCardSuccess |

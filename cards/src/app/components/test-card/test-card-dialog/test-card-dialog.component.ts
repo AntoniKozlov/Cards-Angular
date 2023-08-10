@@ -67,7 +67,8 @@ export class TestCardDialogComponent implements OnInit {
   save() {
     const data: ITestCard = new TestCard(  
       this.name.value,
-      this.description.value
+      this.description.value,
+      this.dialogData.id
     );
     
     this.testCardFacade.dispatch(
@@ -75,7 +76,7 @@ export class TestCardDialogComponent implements OnInit {
     );
 
     this.testCardFacade.selectTestCardStatus$.pipe(take(1)).subscribe((status) => {
-      if (status === TestCardStatuses.SUCCESSFUL_ADDED) {
+      if ([TestCardStatuses.SUCCESSFUL_ADDED, TestCardStatuses.SUCCESSFUL_UPDATED].includes(status)) {
         this.closeDialog(status);
         this.testCardFacade.dispatch(new ChangeTestCardStatus(TestCardStatuses.EMPTY));
       }
