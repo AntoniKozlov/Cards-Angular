@@ -1,9 +1,8 @@
-import { GetTestCards } from './../../core/store/actions/test-card.action';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { TestCardFacade } from 'src/app/core/store/facades/test-card/test-card.facade';
-import { ITestCard } from 'src/app/models/test-card/test-card';
 
+import { ITestCard } from 'src/app/models/test-card/test-card';
+import { TestCardFacade } from 'src/app/core/store/test-card/test-card.facade';
 
 @Component({
   selector: 'app-test-cards',
@@ -15,10 +14,10 @@ export class TestCardsComponent implements OnInit {
   cards$: Observable<ITestCard[]>;
 
   constructor(public testCardFacade: TestCardFacade) {
-    this.cards$ = this.testCardFacade.selectTestCardData$;
+    this.cards$ = this.testCardFacade.testCards$;
   }
 
   ngOnInit() {
-    this.testCardFacade.dispatch(new GetTestCards());
+    this.testCardFacade.load();
   }
 }

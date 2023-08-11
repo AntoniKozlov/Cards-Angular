@@ -1,13 +1,15 @@
 import { Injectable } from "@angular/core";
 import { Actions, ofActionDispatched, Select, Store } from "@ngxs/store";
-import { map, Observable } from "rxjs";
+import { combineLatest, map, Observable } from "rxjs";
 
-import { ITestCard } from './../../src/app/models/test-card/test-card';
+import { ITestCard } from '../../../models/test-card/test-card';
 import { TestCardState } from "./test-card.state";
 import * as TestCardActions from './test-card.actions';
 
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class TestCardFacade {
     @Select(TestCardState.loaded)
     loaded$!: Observable<boolean>;
@@ -15,9 +17,7 @@ export class TestCardFacade {
     @Select(TestCardState.testCards)
     testCards$!: Observable<ITestCard[]>;
 
-    @Select(TestCardState.testCard)
-    testCard$!: Observable<ITestCard>;
-    post$ = (id: number) => this.store.select(TestCardState.testCard(id));
+    testCard$ = (id: number) => this.store.select(TestCardState.testCard(id));
 
 
     loadSuccess$ = this.actions.pipe(

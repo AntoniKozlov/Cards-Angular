@@ -1,16 +1,15 @@
-import { Component, OnInit, Inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, Inject, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { take } from 'rxjs';
-import { AddTestCard, ChangeTestCardStatus, UpdateTestCard } from 'src/app/core/store/actions/test-card.action';
-import { TestCardFacade } from 'src/app/core/store/facades/test-card/test-card.facade';
-import { TestCardStatuses } from 'src/app/core/store/state/test-card.state';
+import { combineLatest, merge, Subscription, take } from 'rxjs';
+
 import { ITestCard, ITestCardDialogData, TestCard, TestCardDialogData, TestCardDialogDataStatuses } from 'src/app/models/test-card/test-card';
 
 
 
 import { NoOptionals, TestCardService } from 'src/app/services/test-card.service';
 import { latinLettersAndDigits, latinLettersOrDigits } from 'src/app/shared/regexp';
+import { TestCardFacade } from 'src/app/core/store/test-card/test-card.facade';
 
 @Component({
   selector: 'app-test-card-dialog',
@@ -18,7 +17,7 @@ import { latinLettersAndDigits, latinLettersOrDigits } from 'src/app/shared/rege
   styleUrls: ['./test-card-dialog.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TestCardDialogComponent implements OnInit {
+export class TestCardDialogComponent implements OnInit, OnDestroy {
   public maxDescriptionLength: number = 400;
   public maxNameLength: number = 100;
   public minLength: number = 2;
@@ -44,6 +43,8 @@ export class TestCardDialogComponent implements OnInit {
 
   public dialogData: ITestCardDialogData;
   private isUpdateCard: boolean;
+
+  private subscriptions = new Subscription();
     
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: ITestCardDialogData,
@@ -61,6 +62,28 @@ export class TestCardDialogComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.subscriptions.add(
+      merge(this.testCardFacade.changeSuccess$, this.testCardFacade.createSuccess$)
+      .pipe(take(1))
+      .subscribe((card) => {
+        console.log(`card: `, card)
+        this.closeDialog(card);
+      })
+    );
+  
+    this.subscriptions.add(
+      merge(this.testCardFacade.changeFailure$, this.testCardFacade.createFailure$)
+      .pipe(take(1))
+      .subscribe((error) => {
+
+        console.error(`${this.isUpdateCard ? 'change' : 'create'}: `, error)
+      })
+    );
+
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   save() {
@@ -70,17 +93,9 @@ export class TestCardDialogComponent implements OnInit {
       this.dialogData.id
     );
 
-    this.testCardFacade.dispatch(
-      this.isUpdateCard ? new UpdateTestCard(data) : new AddTestCard(data)
-    );
-
-    this.testCardFacade.selectTestCardStatus$.pipe(take(1)).subscribe((status) => {
-      if ([TestCardStatuses.SUCCESSFUL_ADDED, TestCardStatuses.SUCCESSFUL_UPDATED].includes(status)) {
-        this.closeDialog(status);
-        this.testCardFacade.dispatch(new ChangeTestCardStatus(TestCardStatuses.EMPTY));
-      }
-    });
-    
+    this.testCardFacade[
+      this.isUpdateCard ? 'change' : 'create'
+    ](data);
   }
 
 
@@ -92,7 +107,7 @@ export class TestCardDialogComponent implements OnInit {
     return this.testCardForm.get('description') as FormControl;
   }
 
-  closeDialog(data: TestCardStatuses) {
+  closeDialog(data: ITestCard) {
     this.dialogRef.close(data);
   }
 

@@ -10,10 +10,6 @@ export type NoOptionals<T> = {
   [K in keyof T]-?: T[K];
 };
 
-interface ITestCardOperation extends Function {
-  (testCards: ITestCard[]): ITestCard[];
-}
-
 @Injectable({
   providedIn: 'root'
 })

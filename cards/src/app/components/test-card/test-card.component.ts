@@ -1,14 +1,11 @@
-import { ChangeTestCardStatus, DeleteTestCard } from './../../core/store/actions/test-card.action';
-
 import { ChangeDetectionStrategy, Component, HostBinding, Input, OnInit } from '@angular/core';
 import { take } from 'rxjs';
 import { TestCardDialogComponent } from './test-card-dialog/test-card-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 
-import { NoOptionals, TestCardService } from '../../services/test-card.service';
 import { ITestCard, ITestCardDialogData, TestCard, TestCardDialogData, TestCardDialogDataStatuses } from 'src/app/models/test-card/test-card';
-import { TestCardStatuses } from 'src/app/core/store/state/test-card.state';
-import { TestCardFacade } from 'src/app/core/store/facades/test-card/test-card.facade';
+import { TestCardFacade } from 'src/app/core/store/test-card/test-card.facade';
+
 
 
 @Component({
@@ -38,20 +35,24 @@ export class TestCardComponent implements OnInit {
       data
     });
 
-    dialogRef.afterClosed().pipe(take(1)).subscribe((result: TestCardStatuses) => {
+    dialogRef.afterClosed().pipe(take(1)).subscribe((result: ITestCard) => {
 
     });
   }
 
   deleteCard(e: Event, card: ITestCard) {
     e.stopPropagation();
-    this.testCardFacade.dispatch(new DeleteTestCard(card));
-
-    this.testCardFacade.selectTestCardStatus$.pipe(take(1)).subscribe((status) => {
-      if (TestCardStatuses.SUCCESSFUL_DELETED == status) {
-        this.testCardFacade.dispatch(new ChangeTestCardStatus(TestCardStatuses.EMPTY));
-      }
+    
+    this.testCardFacade.removeSuccess$.pipe(take(1)).subscribe((id) => {
+      console.log('deleted: ', id)
     });
+
+    this.testCardFacade.removeFailure$.pipe(take(1)).subscribe(({ error, id }) => {
+      console.error('Fail deleted: ', id , ', error: ', error);
+    });
+
+    this.testCardFacade.remove(card.id);
+
   }
 
   getDate() {

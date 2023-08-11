@@ -1,4 +1,4 @@
-import { ITestCard } from './../../src/app/models/test-card/test-card';
+import { ITestCard } from '../../../models/test-card/test-card';
 import { Injectable } from '@angular/core';
 import { State, Action, StateContext, NgxsOnInit, Selector, createSelector } from '@ngxs/store';
 
