@@ -64,7 +64,7 @@ export class TestCardService {
           return (cards: ITestCard[]) => {
             const existingCardIndex = cards.findIndex(existingCard => existingCard.id == card.id);
 
-            if (existingCardIndex !== -1) {
+            if (~existingCardIndex) {
               const updatedCard = new TestCard(card.name, card.description, card.id, card.date);
               cards.splice(existingCardIndex, 1, updatedCard);
             }
@@ -81,7 +81,7 @@ export class TestCardService {
           return (cards: ITestCard[]) => {
             const existingCardIndex = cards.findIndex(existingCard => existingCard.id == card.id);
 
-            if (existingCardIndex !== -1) {
+            if (~existingCardIndex) {
               cards.splice(existingCardIndex, 1);
             }
             return [...cards];
